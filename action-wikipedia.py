@@ -90,10 +90,11 @@ if __name__ == "__main__":
 
     config = read_configuration_file("config.ini")
 
-    language = config["global"].get("locale", "fr_FR")
-    
-    if language.index('_') != -1:
-        LANG = language[:language.index('_')].lower()
+    if config.get("global") is not None:
+        language = config["global"].get("locale", "fr_FR")
+
+        if language.index('_') != -1:
+            LANG = language[:language.index('_')].lower()
 
     with Hermes(MQTT_ADDR) as h:
-        h.subscribe_intent("searchWikipediaSummary", searchWikipediaSummary).loop_forever()
+        h.subscribe_intent("Tealque:searchWikipedia", searchWikipediaSummary).loop_forever()
