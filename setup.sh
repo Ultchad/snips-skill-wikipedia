@@ -18,3 +18,10 @@ fi
 . $VENV/bin/activate
 
 pip install -r requirements.txt
+
+if [ -f  config.ini ]
+then
+    echo "config.ini already exist, he will not be replacing"
+else
+    cp config.ini.default config.ini
+fi
