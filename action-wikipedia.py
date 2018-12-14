@@ -28,6 +28,7 @@ def read_configuration_file(configuration_file):
 
 
 LANG = 'fr'
+SENTENCES_MAX = 2
 
 ERROR_SENTENCES = {
     'en': {
@@ -50,9 +51,10 @@ def searchWikipediaSummary(hermes, intentMessage):
         hermes.publish_end_session(intentMessage.session_id, '')
         return None
 
-    sentences = None
     if intentMessage.slots.sentences:
         sentences = intentMessage.slots.sentences[0].slot_value.value
+    else:
+        sentences = SENTENCES_MAX
 
     # Do the summary search
 
@@ -81,7 +83,7 @@ def searchWikipediaSummary(hermes, intentMessage):
 
     if session_continue:
         print('Session continue')
-        hermes.publish_continue_session(intentMessage.session_id, result, ['searchWikipediaSummary'])
+        hermes.publish_continue_session(intentMessage.session_id, result, ['Tealque:searchWikipedia'])
     else:
         hermes.publish_end_session(intentMessage.session_id, result)
 
@@ -92,6 +94,12 @@ if __name__ == "__main__":
 
     if config.get("global") is not None:
         language = config["global"].get("locale", "fr_FR")
+        SENTENCES_MAX = config["global"].get("sentences_max", 2)
+        try:
+            SENTENCES_MAX = int(SENTENCES_MAX)
+        except ValueError:
+            print('sentences_max in config.ini must be a number')
+            exit(2)
 
         if language.index('_') != -1:
             LANG = language[:language.index('_')].lower()
