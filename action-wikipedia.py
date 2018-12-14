@@ -67,7 +67,7 @@ def searchWikipediaSummary(hermes, intentMessage):
     try:
         result = wikipedia.summary(str(query), auto_suggest=True, sentences=sentences)
 
-    except wikipedia.exceptions.DisambiguationError, e:
+    except wikipedia.exceptions.DisambiguationError as e:
         # Exception raised when a page resolves to a Disambiguation page.
         # The options property contains a list of titles of Wikipedia pages that the query may refer to.
         # may_refer = e.options
