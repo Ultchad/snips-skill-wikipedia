@@ -95,9 +95,15 @@ if __name__ == "__main__":
     if config.get("global") is not None:
         language = config["global"].get("locale", "fr_FR")
         SENTENCES_MAX = config["global"].get("sentences_max", 2)
+
+        # If config.ini exist but sentences_max not set
+        if SENTENCES_MAX == '':
+            SENTENCES_MAX = 2
+
         try:
             SENTENCES_MAX = int(SENTENCES_MAX)
         except ValueError:
+            print('SENTENCES_MAX: {}, type: {}'.format(SENTENCES_MAX, type(SENTENCES_MAX)))
             print('sentences_max in config.ini must be a number')
             exit(2)
 
