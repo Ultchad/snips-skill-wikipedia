@@ -1,8 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
-import ConfigParser
+import configparser
 from hermes_python.hermes import Hermes
 import wikipedia
 
@@ -12,7 +12,7 @@ MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
 
-class SnipsConfigParser(ConfigParser.SafeConfigParser):
+class SnipsConfigParser(configparser.SafeConfigParser):
     def to_dict(self):
         return {section: {option_name: option for option_name, option in self.items(section)} for section in self.sections()}
 
@@ -23,7 +23,7 @@ def read_configuration_file(configuration_file):
             conf_parser = SnipsConfigParser()
             conf_parser.readfp(f)
             return conf_parser.to_dict()
-    except (IOError, ConfigParser.Error) as e:
+    except (IOError, configparser.Error) as e:
         return dict()
 
 
@@ -95,9 +95,15 @@ if __name__ == "__main__":
     if config.get("global") is not None:
         language = config["global"].get("locale", "fr_FR")
         SENTENCES_MAX = config["global"].get("sentences_max", 2)
+
+        # If config.ini exist but sentences_max not set
+        if SENTENCES_MAX == '':
+            SENTENCES_MAX = 2
+
         try:
             SENTENCES_MAX = int(SENTENCES_MAX)
         except ValueError:
+            print('SENTENCES_MAX: {}, type: {}'.format(SENTENCES_MAX, type(SENTENCES_MAX)))
             print('sentences_max in config.ini must be a number')
             exit(2)
 
